@@ -33,7 +33,7 @@ env DEBUG=swap-token:* ts-node app/command-line/swap-token-cli.ts swapToken -k <
 ```
 
 # Note
-- Do không có yêu cầu cụ, để có thể swap tỉ lệ 1:1 với sol nên sẽ chọn decimals của các token test là 9
+- Do không có yêu cầu cụ, để có thể swap tỉ lệ với sol dễ dàng nên sẽ chọn decimals của các token test là 9 (giống với của sol)
 - Không rõ ràng việc swap ở đây sẽ user sẽ được mintTo token (nghĩa là token sẽ được chuyển quyền mint cho program) hay sẽ được transfer (program sẽ sở hữu 1 PDA chứa 1 lượng token phục vụ việc transfer) => chọn việc program cho phép tạo token tương ứng và sẽ sử dụng trường hợp mintTo
 - Việc transfer sol có thể transfer về 1 PDA trên program và cho phép adminWallet claim về hoặc transfer thẳng cho adminwallet => ở đây sẽ chọn cách thức transfer thẳng cho admin wallet
 - Hoàn toàn có thể tạo thêm PDA lưu lại trạng thái của program cho phép pause program trong trường hợp cần thiết, cũng như lưu lại admin wallet (wallet sẽ nhận sol) ngay trên program nếu cần thiết
