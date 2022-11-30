@@ -1,7 +1,10 @@
 import { Command } from 'commander';
 import {loadProgram, loadWalletKey} from './utils';
-import { programId } from '../const';
+import {ADMINWALLET, programId} from '../const';
 import {initToken} from "./initToken";
+import {swapToken} from "./swap-token";
+import {PublicKey} from "@solana/web3.js";
+import {web3} from "@project-serum/anchor";
 const program = new Command();
 
 const debug = require('debug')('swap-token:main');
@@ -40,4 +43,29 @@ programCommand('initToken')
     const program = await loadProgram(adminWallet, env, programId.toString(), rpc);
     await initToken(program, adminWallet, decimal);
   });
+
+programCommand('swapToken')
+    .requiredOption('-a, --amount <number>', 'amount of sol swap')
+    .requiredOption('-m, --mint <string>', 'token address')
+    .action(async (options) => {
+        debug('options: ', options);
+        const keypairPath = options.keypair;
+        const env = options.env;
+        const rpc = options.rpc;
+        const amount = options.amount
+        const tokenAddress = options.mint
+        debug('keypairPath: ', keypairPath);
+        const userWallet = await loadWalletKey(keypairPath);
+        const mint = new PublicKey(tokenAddress);
+        //devnet rpc: https://winter-flashy-dawn.solana-devnet.discover.quiknode.pro/c7023a9cfda5932a4e18ec7f381e98cc2226c22e/
+        const program = await loadProgram(userWallet, env, programId.toString(), rpc);
+
+        const mint_authority = await web3.PublicKey.findProgramAddress(
+            [Buffer.from('mint_to'), mint.toBuffer()],
+            program.programId,
+        );
+        console.log('mint_to_authority: ', mint_authority[0].toString());
+
+        await swapToken(program, userWallet, mint, ADMINWALLET, mint_authority[0], amount);
+    });
 program.parse(process.argv);
