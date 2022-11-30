@@ -1,15 +1,18 @@
+pub mod instructions;
+mod errors;
+
+pub use instructions::*;
+
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("62ztfPnBnder4D8cgmztnQjWFFwbB18EkhRRgeYpoMoG");
 
 #[program]
 pub mod swap_token {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        Ok(())
+    pub fn init_token(ctx: Context<InitToken>, decimals: u8) -> Result<()> {
+        init_token::exec(ctx, decimals)
     }
 }
 
-#[derive(Accounts)]
-pub struct Initialize {}
