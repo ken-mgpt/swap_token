@@ -9,7 +9,8 @@
         "@solana/web3.js": "^1.53.0",
         "bs58": "^5.0.0",
         "buffer": "^6.0.3",
-        "yarn": "^1.22.19"
+        "yarn": "^1.22.19",
+        "commander": "^9.4.0"
     },
     "devDependencies": {
         "@types/bn.js": "^5.1.0",

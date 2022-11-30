@@ -1,15 +1,13 @@
 import * as anchor from '@project-serum/anchor';
 import {BN, Program, web3} from '@project-serum/anchor';
-import {programId} from '../const';
 import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
-import {Keypair, PublicKey, sendAndConfirmTransaction, Transaction} from "@solana/web3.js";
-import {loadProgram, loadWalletKey} from "./utils";
+import {Keypair, sendAndConfirmTransaction, Transaction} from "@solana/web3.js";
 
-export async function initToken() {
-    const userWallet = await loadWalletKey('/home/truongnx/.config/solana/J2D.json');
-    const program =
-        (await loadProgram(userWallet, 'devnet', programId.toString(), 'https://winter-flashy-dawn.solana-devnet.discover.quiknode.pro/c7023a9cfda5932a4e18ec7f381e98cc2226c22e/')) as Program
-
+export async function initToken(
+    program: Program,
+    userWallet: Keypair,
+    decimal: number
+    ) {
     const mintKey = Keypair.generate();
     const mint = mintKey.publicKey;
     console.log('mint: ', mint.toString());
@@ -19,7 +17,7 @@ export async function initToken() {
     );
     console.log('mint_to_authority: ', mint_authority[0].toString());
 
-    const intructs = await program.instruction.initToken(new BN(9), {
+    const intructs = await program.instruction.initToken(new BN(decimal), {
         accounts: {
             payer: userWallet.publicKey,
             mint: mint,
@@ -36,7 +34,3 @@ export async function initToken() {
     });
     console.log('tx: ' + tx);
 }
-
-initToken().then(() => {
-    console.log('done');
-});

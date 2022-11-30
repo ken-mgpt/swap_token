@@ -18,7 +18,7 @@ export async function loadProgram(
     );
 
     const walletWrapper = new anchor.Wallet(walletKeyPair);
-    const provider = new anchor.AnchorProvider(solConnection, walletWrapper, {
+    const provider = new anchor.Provider(solConnection, walletWrapper, {
         preflightCommitment: 'recent',
     });
     const idl = await anchor.Program.fetchIdl(new anchor.web3.PublicKey(programId), provider);
