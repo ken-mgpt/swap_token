@@ -7,7 +7,7 @@ export async function initToken(
     program: Program,
     userWallet: Keypair,
     decimal: number
-    ) {
+) {
     const mintKey = Keypair.generate();
     const mint = mintKey.publicKey;
     console.log('mint: ', mint.toString());
@@ -30,7 +30,11 @@ export async function initToken(
     let transaction = new Transaction();
     transaction.add(intructs);
     const tx = await sendAndConfirmTransaction(program.provider.connection, transaction, [userWallet, mintKey], {
-        commitment: 'processed',
+        commitment: 'finalized',
     });
     console.log('tx: ' + tx);
+    return {
+        tx: tx,
+        mint: mint
+    };
 }
