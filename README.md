@@ -7,6 +7,12 @@ a project allow create a custom token, swap new token with sol
 - add test for program
 
 # run test
+- test with js
 ```
 yarn swap-token-test
+```
+
+- test with cargo
+```angular2html
+cargo test
 ```

@@ -22,7 +22,6 @@ export async function loadProgram(
         preflightCommitment: 'recent',
     });
     const idl = await anchor.Program.fetchIdl(new anchor.web3.PublicKey(programId), provider);
-    console.log('idl: ', JSON.stringify(idl));
     const program = new anchor.Program(idl, new anchor.web3.PublicKey(programId), provider);
     return program;
 }
@@ -32,7 +31,6 @@ export function loadWalletKey(keypair): Keypair {
         throw new Error('Keypair is required!');
     }
 
-    console.log('keyPair: ', keypair)
     const decodedKey = new Uint8Array(
         keypair.endsWith('.json') && !Array.isArray(keypair)
             ? JSON.parse(fs.readFileSync(keypair).toString())
@@ -40,6 +38,5 @@ export function loadWalletKey(keypair): Keypair {
     );
 
     const loaded = Keypair.fromSecretKey(decodedKey);
-    console.log(`wallet public key: ${loaded.publicKey}`);
     return loaded;
 }
