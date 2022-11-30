@@ -18,14 +18,18 @@ cargo test
 ```
 
 # command:
+- programId: 62ztfPnBnder4D8cgmztnQjWFFwbB18EkhRRgeYpoMoG 
+  - on devnet && testnet
 - create token
+  - tx example (on testnet): 2af7VePuM4erHsFB2zUdkR6XkHnAHCizXzKXjjvUs4e1Vzxy9ABtXpvgVdr7eRd8LEGJUETJtR9L3g1nK5YTekvt
 ```angular2html
-env DEBUG=swap-token:* ts-node app/command-line/swap-token-cli.ts initToken -k <adminwallet keypath> -d <decimals>
-```
+env DEBUG=swap-token:* ts-node app/command-line/swap-token-cli.ts initToken -k <adminwallet keypath> -d <decimals> -e <endpoint testnet> 
+``` 
 
 - swap token (use mint to)
+  - tx example (on testnet): 34tiUVzeqrNWLQ9CbaKi14Hu3Ro3LsVEMrdfADXXbcHckC1RYeZDHfQbjvfHhVvde7KBCxL9uxavguUKyp7vcxgm
 ```angular2html
-env DEBUG=swap-token:* ts-node app/command-line/swap-token-cli.ts swapToken -k <keyPath> -m <TokenAddress> -a <SolTransfer>
+env DEBUG=swap-token:* ts-node app/command-line/swap-token-cli.ts swapToken -k <keyPath> -m <TokenAddress> -a <SolTransfer> -e <endpoint testnet>
 ```
 
 # Note
