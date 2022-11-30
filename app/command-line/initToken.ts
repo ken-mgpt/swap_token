@@ -1,0 +1,42 @@
+import * as anchor from '@project-serum/anchor';
+import {BN, Program, web3} from '@project-serum/anchor';
+import {programId} from '../const';
+import {TOKEN_PROGRAM_ID} from '@solana/spl-token';
+import {Keypair, PublicKey, sendAndConfirmTransaction, Transaction} from "@solana/web3.js";
+import {loadProgram, loadWalletKey} from "./utils";
+
+export async function initToken() {
+    const userWallet = await loadWalletKey('/home/truongnx/.config/solana/J2D.json');
+    const program =
+        (await loadProgram(userWallet, 'devnet', programId.toString(), 'https://winter-flashy-dawn.solana-devnet.discover.quiknode.pro/c7023a9cfda5932a4e18ec7f381e98cc2226c22e/')) as Program
+
+    const mintKey = Keypair.generate();
+    const mint = mintKey.publicKey;
+    console.log('mint: ', mint.toString());
+    const mint_authority = await web3.PublicKey.findProgramAddress(
+        [Buffer.from('mint_to'), mint.toBuffer()],
+        program.programId,
+    );
+    console.log('mint_to_authority: ', mint_authority[0].toString());
+
+    const intructs = await program.instruction.initToken(new BN(9), {
+        accounts: {
+            payer: userWallet.publicKey,
+            mint: mint,
+            mintAuthorityPubkey: mint_authority[0],
+            tokenProgram: TOKEN_PROGRAM_ID,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        },
+    });
+    let transaction = new Transaction();
+    transaction.add(intructs);
+    const tx = await sendAndConfirmTransaction(program.provider.connection, transaction, [userWallet, mintKey], {
+        commitment: 'processed',
+    });
+    console.log('tx: ' + tx);
+}
+
+initToken().then(() => {
+    console.log('done');
+});
