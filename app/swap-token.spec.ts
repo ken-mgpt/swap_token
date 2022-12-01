@@ -31,9 +31,9 @@ describe('sb-renting', () => {
     before(async () => {
       program = await loadProgram(
           adminWallet,
-          'devnet',
+          'testnet',
           programId,
-          'https://winter-flashy-dawn.solana-devnet.discover.quiknode.pro/c7023a9cfda5932a4e18ec7f381e98cc2226c22e/'
+          'https://api.testnet.solana.com'
       );
     })
     // check specify decimals, mint_authority
@@ -61,21 +61,24 @@ describe('sb-renting', () => {
 
     it('should return true when swap token', async function () {
       try {
-        const amount = Math.floor(Math.random()*9 + 1)*10**9;
+        const amount = Math.floor(Math.random()*9 + 1)*10**8;
         const mint_authority = await web3.PublicKey.findProgramAddress(
             [Buffer.from('mint_to'), TOKEN_ADDRESS.toBuffer()],
             program.programId,
         );
-        console.log('mint_to_authority: ', mint_authority[0].toString());
+        debug('mint_to_authority: ', mint_authority[0].toString());
         const tx = await swapToken(program, userWallet, TOKEN_ADDRESS, ADMINWALLET, mint_authority[0], amount);
         debug('swap tx: ', tx);
-        const transactionInfo = await program.provider.connection.getParsedTransaction(tx);
+        let transactionInfo = null
+        while (transactionInfo == null) {
+          transactionInfo = await program.provider.connection.getParsedTransaction(tx);
+        }
         const solTransfer = (transactionInfo.meta.innerInstructions[0].instructions[0] as ParsedInstruction).parsed.info.lamports
-        console.log('solTransfer: ', solTransfer);
+        debug('solTransfer: ', solTransfer);
         assert.equal(solTransfer, amount, 'sol transfer equal amount');
         const tokenTransfer = (transactionInfo.meta.innerInstructions[0].instructions[1] as ParsedInstruction).parsed.info.amount
-        console.log('tokenTransfer: ', tokenTransfer);
-        assert.equal(tokenTransfer, amount * 100, 'token transfer should true');
+        debug('tokenTransfer: ', tokenTransfer);
+        assert.equal(tokenTransfer, amount * 10, 'token transfer should true');
       } catch (e) {
         assert.fail(e.message);
       }
@@ -88,7 +91,7 @@ describe('sb-renting', () => {
             [Buffer.from('mint_to'), FAKE_TOKEN_ADDRESS.toBuffer()],
             program.programId,
         );
-        console.log('mint_to_authority: ', mint_authority[0].toString());
+        debug('mint_to_authority: ', mint_authority[0].toString());
         await swapToken(program, userWallet, FAKE_TOKEN_ADDRESS, ADMINWALLET, mint_authority[0], amount);
         assert.fail('it should not pass to here')
       } catch (e) {
@@ -103,7 +106,7 @@ describe('sb-renting', () => {
             [Buffer.from('mint_to'), TOKEN_ADDRESS.toBuffer()],
             program.programId,
         );
-        console.log('mint_to_authority: ', mint_authority[0].toString());
+        debug('mint_to_authority: ', mint_authority[0].toString());
         await swapToken(program, userWallet, TOKEN_ADDRESS, FAKE_ADMIN_WALLET, mint_authority[0], amount);
         assert.fail('it should not pass to here')
       } catch (e) {
@@ -118,7 +121,7 @@ describe('sb-renting', () => {
             [Buffer.from('mint_to'), FAKE_TOKEN_ADDRESS.toBuffer()],
             program.programId,
         );
-        console.log('mint_to_authority: ', mint_authority[0].toString());
+        debug('mint_to_authority: ', mint_authority[0].toString());
         await swapToken(program, userWallet, TOKEN_ADDRESS, ADMINWALLET, mint_authority[0], amount);
         assert.fail('it should not pass to here')
       } catch (e) {

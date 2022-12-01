@@ -15,9 +15,9 @@ export const FAKE_ADMIN_WALLET = new anchor.web3.PublicKey('2z5Hdf8f5Z9EcNbybvcN
 
 export const SOL_ADDRESS = new anchor.web3.PublicKey('So11111111111111111111111111111111111111112');
 
-export const TOKEN_ADDRESS = new anchor.web3.PublicKey('8YWeEZwxajvuEoe4oYsDVBMGhYLQXCjfRERH1Qdhe4oo');
+export const TOKEN_ADDRESS = new anchor.web3.PublicKey('Ct36S2Yw4ATjEpoGUF7gwGx2dooUCBugvq2tNZRBNpKh');
 
-export const FAKE_TOKEN_ADDRESS = new anchor.web3.PublicKey('58xGcTaN6BCCB5NwLwoTrPyEH7BCjqqESqV7r1UzZt9U');
+export const FAKE_TOKEN_ADDRESS = new anchor.web3.PublicKey('8DnLg7k2f3QeCSYYTK2GmD3Jjd7rSTfJnCxYP3SjxQKZ');
 
 // wallet: 2z5Hdf8f5Z9EcNbybvcNRtQj3WVychSD2SYNmSaAy1dZ
 export const PROGRAM_USER_PRIMARY_WALLET = [
