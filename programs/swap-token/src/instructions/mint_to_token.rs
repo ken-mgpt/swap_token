@@ -57,9 +57,7 @@ pub fn exec(ctx: Context<SwapToken>, sol_payed: u64) -> Result<()> {
 
     let token_sended = caculate_token_sended(sol_payed);
 
-    let (key, bump) = Pubkey::find_program_address(&[b"mint_to", mint.key().as_ref()], &program_id.key());
-    msg!("key: {:?}", key);
-    msg!("bump: {:?}", bump);
+    let (_, bump) = Pubkey::find_program_address(&[b"mint_to", mint.key().as_ref()], &program_id.key());
 
     let seeds: &[&[&[u8]]] = &[&[
         "mint_to".as_ref(),
