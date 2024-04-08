@@ -6,7 +6,7 @@ pub use instructions::*;
 
 use anchor_lang::prelude::*;
 
-declare_id!("62ztfPnBnder4D8cgmztnQjWFFwbB18EkhRRgeYpoMoG");
+declare_id!("FYLshD5yWikqKSxRc6wCn1Y3Dtm3auoXa29zLPuXbos8");
 
 #[program]
 pub mod swap_token {

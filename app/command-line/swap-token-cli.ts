@@ -4,7 +4,8 @@ import {ADMINWALLET, programId} from '../const';
 import {initToken} from "./initToken";
 import {swapToken} from "./swap-token";
 import {PublicKey} from "@solana/web3.js";
-import {web3} from "@project-serum/anchor";
+import {Program, web3} from "@project-serum/anchor";
+import * as anchor from "@coral-xyz/anchor";
 const program = new Command();
 
 const debug = require('debug')('swap-token:main');
@@ -20,7 +21,7 @@ function programCommand(
       'Solana cluster env name',
       'devnet', //mainnet-beta, testnet, devnet
     )
-    .option('-r, --rpc <string>', 'rpc endpoint', '');
+    .option('-r, --rpc <string>', 'rpc endpoint', 'https://api.devnet.solana.com');
 
   if (options.requireWallet) {
     cmProgram = cmProgram.requiredOption('-k, --keypair <path>', `Solana wallet location`);
@@ -28,7 +29,7 @@ function programCommand(
 
   return cmProgram;
 }
-
+// Derive the address (public key) of a greeting account from the program so that it's easy to find later.
 programCommand('initToken')
     .requiredOption('-d, --decimals <number>', 'decimals of token')
   .action(async (options) => {

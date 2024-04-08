@@ -28,7 +28,7 @@ pub struct InitToken<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-pub fn exec(ctx: Context<InitToken>, decimals: u8) -> Result<()> {
+pub fn exec(ctx: Context<InitToken>, _decimals: u8) -> Result<()> {
     let mint = &ctx.accounts.mint;
     let payer = &ctx.accounts.payer.key();
     let mint_authority = &ctx.accounts.mint_authority_pubkey;

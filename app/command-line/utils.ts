@@ -10,20 +10,20 @@ export async function loadProgram(
     customRpcUrl?: string,
 ) {
     if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl);
-
     // @ts-ignore
     const solConnection = new anchor.web3.Connection(
         //@ts-ignore
         customRpcUrl || clusterApiUrl(env),
     );
-
     const walletWrapper = new anchor.Wallet(walletKeyPair);
     const provider = new anchor.Provider(solConnection, walletWrapper, {
-        preflightCommitment: 'recent',
+        preflightCommitment: 'confirmed',
     });
-    const idl = await anchor.Program.fetchIdl(new anchor.web3.PublicKey(programId), provider);
-    const program = new anchor.Program(idl, new anchor.web3.PublicKey(programId), provider);
-    return program;
+    const programInfo = await solConnection.getAccountInfo(new anchor.web3.PublicKey(programId));
+    const idl = JSON.parse(
+        fs.readFileSync("target/idl/swap_token.json", "utf8")
+    );
+    return new anchor.Program(idl, new anchor.web3.PublicKey(programId), provider);
 }
 
 export function loadWalletKey(keypair): Keypair {

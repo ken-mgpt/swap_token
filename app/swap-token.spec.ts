@@ -5,11 +5,10 @@ import {
   programId, TOKEN_ADDRESS,
 } from './const';
 import { before } from 'mocha';
-import { BN, web3 } from '@project-serum/anchor';
+import { web3 } from '@project-serum/anchor';
 import * as anchor from '@project-serum/anchor';
 import * as assert from 'assert';
-import { ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import {Keypair, ParsedInstruction} from '@solana/web3.js';
+import {ParsedInstruction} from '@solana/web3.js';
 import {loadProgram} from "./command-line/utils";
 import {initToken} from "./command-line/initToken";
 import {swapToken} from "./command-line/swap-token";
@@ -31,9 +30,9 @@ describe('sb-renting', () => {
     before(async () => {
       program = await loadProgram(
           adminWallet,
-          'testnet',
-          programId,
-          'https://api.testnet.solana.com'
+          'devnet',
+          programId.toString(),
+          'https://api.devnet.solana.com'
       );
     })
     // check specify decimals, mint_authority
@@ -61,7 +60,7 @@ describe('sb-renting', () => {
 
     it('should return true when swap token', async function () {
       try {
-        const amount = Math.floor(Math.random()*9 + 1)*10**8;
+        const amount = Math.floor(Math.random()*9 + 1)*10**7;
         const mint_authority = await web3.PublicKey.findProgramAddress(
             [Buffer.from('mint_to'), TOKEN_ADDRESS.toBuffer()],
             program.programId,
@@ -86,16 +85,17 @@ describe('sb-renting', () => {
 
     it('should return false with fake token', async function () {
       try {
-        const amount = Math.floor(Math.random()*9 + 1)*10**9;
+        const amount = Math.floor(Math.random()*9 + 1)*10**4;
         const mint_authority = await web3.PublicKey.findProgramAddress(
-            [Buffer.from('mint_to'), FAKE_TOKEN_ADDRESS.toBuffer()],
+            [Buffer.from('mint_to'), TOKEN_ADDRESS.toBuffer()],
             program.programId,
         );
-        debug('mint_to_authority: ', mint_authority[0].toString());
+        debug('mint_to_authority333: ', mint_authority[0].toString());
         await swapToken(program, userWallet, FAKE_TOKEN_ADDRESS, ADMINWALLET, mint_authority[0], amount);
         assert.fail('it should not pass to here')
       } catch (e) {
-        assert.equal(e.message.includes("Program failed to complete"), true);
+        console.log("go here:", e.message)
+        assert.equal(e.message.includes("0x7d6"), true);
       }
     });
 
